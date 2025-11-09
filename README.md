@@ -1,99 +1,132 @@
-# MapMyMoney 🧾💸
+# 💸 FinSync – Startup Expense Management Web App
 
-**MapMyMoney** is a collaborative expense tracking and fund management app. It allows users to create or join companies, add and manage expenses, contribute funds, and track reimbursements—making it ideal for startups, clubs, roommates, or any group sharing finances.
+**FinSync** is a responsive, collaborative expense and fund management web application designed for **startups, small teams, or any group managing shared finances**.  
+It allows users to **create or join companies**, **submit and manage expenses**, **add funds**, and **track reimbursements** — all synchronized in real time using **Supabase**.
 
 ---
 
 ## 🚀 Features
 
-- 🔐 **Authentication** via email/password or Google Login (using Supabase)
+- 🔐 **Authentication** using **Supabase Auth** (Email/Password)
 - 🏢 **Company Management**
-  - Create, update, and delete companies
-  - Join or leave a company
+  - Create, update, and delete companies  
+  - Join or leave a company anytime  
 - 💰 **Expense Management**
-  - Add, edit, and delete expenses with optional image upload
-  - Filter expenses by user or company
-- 🧾 **Fund Contributions**
-  - Add or update fund details for a company
+  - Add, edit, or delete expenses with receipt upload  
+  - Filter and view expenses by user or company  
+- 💵 **Fund Management**
+  - Add and update total funds for each company  
+  - Track available balance and fund inflow  
 - ✅ **Reimbursement Tracking**
-  - Mark expenses as `pending` or `done`
-- 🧑‍🤝‍🧑 Multiple users per company
-- ☁️ Built on **Supabase** (PostgreSQL, Auth, and Storage)
+  - Mark expenses as `pending`, `approved`, or `reimbursed`  
+- 📊 **Dashboard**
+  - Real-time analytics for total funds, expenses, and categories  
+- 📱 **Responsive Design**
+  - Fully optimized for mobile, tablet, and desktop devices  
+- ☁️ **Built with Supabase**
+  - PostgreSQL (Database), Auth, and Storage for images and receipts  
 
 ---
 
-## 📦 Tech Stack
+## 🧠 Project Goals
 
-- **Frontend**: React Native (with Expo)
-- **State Management**: Redux
-- **Backend-as-a-Service**: Supabase
-- **Database**: PostgreSQL (via Supabase)
-- **Image Storage**: Supabase Storage
+- Simplify fund and expense management for small teams and startups  
+- Maintain transparency and accountability in reimbursements  
+- Provide a mobile-compatible web solution with real-time synchronization  
 
 ---
 
-## 🧾 Database Schema (Supabase SQL)
+## 🧾 Tech Stack
 
-```sql
--- USERS table
+| Layer | Technology |
+|-------|-------------|
+| **Frontend** | React.js, HTML5, CSS3 (Responsive Design) |
+| **Backend / Database** | Supabase (PostgreSQL, Realtime, Storage, Auth) |
+| **Authentication** | Supabase Auth (Email/Password) |
+| **Version Control** | Git & GitHub |
+| **Deployment (Optional)** | Netlify / Vercel |
+
+---
+
+## 🗄️ Simplified Database Schema (Supabase)
+
+```
+-- USERS
 create table users (
   id uuid primary key default uuid_generate_v4(),
   name text,
   email text unique
 );
 
--- COMPANIES table
+-- COMPANIES
 create table companies (
   id uuid primary key default uuid_generate_v4(),
   name text,
   owner_id uuid references users(id)
 );
 
--- EXPENSES table
+-- EXPENSES
 create table expenses (
   id uuid primary key default uuid_generate_v4(),
   user_id uuid references users(id),
   company_id uuid references companies(id),
   amount numeric,
+  category text,
   description text,
   image_url text,
-  status text check (status in ('pending', 'done')) default 'pending',
+  status text check (status in ('pending', 'approved', 'reimbursed')) default 'pending',
+  created_at timestamp default now()
+);
+
+-- FUNDS
+create table funds (
+  id uuid primary key default uuid_generate_v4(),
+  company_id uuid references companies(id),
+  amount numeric,
   created_at timestamp default now()
 );
 ```
 
----
-
-## 🔐 Supabase Auth Setup
-
-- Enable **Email/Password** and **Google** provider in Supabase Auth.
-- Create a `.env` file and store your:
-  ```env
-  SUPABASE_URL=your-supabase-url
-  SUPABASE_ANON_KEY=your-anon-key
-
----
-
 ## 🖼️ Image Upload
-- Images for expenses are uploaded using Supabase Storage.
-- A public bucket is used to generate preview links for images.
+
+- Receipts and bills are stored in **Supabase Storage**.  
+- Public bucket access allows secure URL-based image preview.
 
 ---
 
-## 🧠 Project Philosophy
-- Financial transparency within teams and groups can improve trust, reduce conflicts, and help build sustainable communities.
-- MapMyMoney brings that transparency with simplicity.
+## 🔐 Setup Instructions
+
+1. Clone the repository  
+   ```bash
+   git clone https://github.com/your-username/finsync.git
+   ```
+2. Create a .env file with your Supabase credentials
+     ```bash
+     VITE_SUPABASE_URL=your-supabase-url
+     VITE_SUPABASE_ANON_KEY=your-anon-key
+     ```
+3. Install dependencies and start the app
+   ```bash
+   npm install
+   npm run dev
+   ```
+## 📈 Future Enhancements
+
+- Automated reimbursements via payment APIs  
+- Monthly and category-based financial reports  
+- Role-based permissions (Admin, Employee)  
+- Export data to CSV/PDF  
+- AI-based expense categorization and anomaly detection  
 
 ---
 
-## 🧪 Future Improvements
-- Notifications for expenses or reimbursements
-- Monthly reports for each company
-- Role-based permissions (Admins, Members)
-- Export to CSV/PDF
+## 🧩 Project Philosophy
+
+> “Every rupee accountable, every expense visible.”  
+> FinSync promotes **financial transparency and trust** in teams by combining simplicity with real-time data synchronization.
 
 ---
 
 ## 🤝 Contributing
-- Feel free to fork, suggest features, or report bugs via GitHub Issues.
 
+Feel free to fork, suggest improvements, or raise issues via GitHub.
